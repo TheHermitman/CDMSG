@@ -1,4 +1,6 @@
 import os
+import warnings
+
 import torch
 import numpy as np
 
@@ -29,7 +31,7 @@ def getRCAM_and_CN(num_node, file, rcam_file):
                 line = file.readline()
             file.close()
 
-        RCAM = torch.zeros(num_node, len(communities))
+        RCAM = torch.zeros(num_node, len(communities)) # 输入图中节点数量和图形成的社区数量，返回？
         # print(m.shape)
         for i, c in enumerate(communities):
             for n in c:
@@ -43,12 +45,12 @@ def overlapping_nmi(X, Y):
     # X:RCAM
     # Y:PCAM
     if not ((X == 0) | (X == 1)).all():
-        raise ValueError("X should be a binary matrix")
+        raise ValueError("X should be a binary matrix") # 二元矩阵
     if not ((Y == 0) | (Y == 1)).all():
         raise ValueError("Y should be a binary matrix")
 
     if X.shape[1] > X.shape[0] or Y.shape[1] > Y.shape[0]:
-        warnings.warn("It seems that you forgot to transpose the F matrix")
+        warnings.warn("It seems that you forgot to transpose the F matrix") # 忘了转置F矩阵
     X = X.T
     Y = Y.T
 

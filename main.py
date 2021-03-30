@@ -15,10 +15,11 @@ import time
 
 
 markov_time = 1
-base_path = ".\\data\\" + str(sys.argv[1])
-gml_file_path = base_path + '\\network.gml'
-community_file_path = base_path + '\\community_v2.txt'
-rcam_file = base_path + '\\RCAM.txt'
+# base_path = ".\\data\\" + str(sys.argv[1])
+base_path = "D:\work\SocialWork\CDMSG\data2\youtube"
+gml_file_path = base_path + '\\network.gml' # 包含图的节点和边的关系的文件
+community_file_path = base_path + '\\community_v2.txt'  # 社区文件路径
+rcam_file = base_path + '\\RCAM.txt'  # 最后输出
 g = ig.Graph.Read_GML(gml_file_path)
 num_node = len(g.vs)
 adj_m = g.get_adjacency(type=2, eids=False)
@@ -30,7 +31,8 @@ adj = np.mat(np.array(adj).reshape(num_node, num_node))
 RCAM, num_community = getRCAM_and_CN(num_node, community_file_path, rcam_file)
 num_hidden = 128
 threshold = np.sqrt(-np.log(1 - (2 * num_node / (num_node * (num_node - 1)))))
-num_epoch = 40
+# num_epoch = 40
+num_epoch = 20
 lr = 0.01
 dropout_on = True
 weight_decay_on = True
@@ -44,7 +46,7 @@ def m_pow(m, t):
     return m_p
 
 
-def pre_loss_func():
+def pre_loss_func():# 预测损失函数
     t = markov_time
     A = torch.from_numpy(adj).float()  # 邻接矩阵
     # np.savetxt('A.txt', A.detach().numpy())
@@ -71,7 +73,7 @@ def norm(adj):
     return adj_n
 
 
-class GCNLayer(nn.Module):
+class GCNLayer(nn.Module): # GCN图卷积网络
     def __init__(self, infeature_size, outfeature_size):
         super(GCNLayer, self).__init__()
         self.weight = Parameter(torch.FloatTensor(infeature_size, outfeature_size))
