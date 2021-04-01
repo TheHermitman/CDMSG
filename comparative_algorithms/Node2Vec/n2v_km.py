@@ -4,14 +4,21 @@ import numpy as np
 import networkx as nx
 import igraph as ig
 
+"""
+    使用k-means进行聚类，单层
+"""
+
+
+from comparative_algorithms.LINE.ge import Node2Vec
+
 sys.setrecursionlimit(1000000)
 sys.path.append('..\\..')
 from evaluate import *
 
-basepath = "..\\..\\data\\" + str(sys.argv[1]) + "\\"
+# basepath = "..\\..\\data\\" + str(sys.argv[1]) + "\\"
+basepath = "D:\work\SocialWork\CDMSG\data2\youtube\\"
 
-
-def networkx_getnetwork():
+def networkx_getnetwork(): # 生成图
     G = nx.Graph()
     f = open(basepath + "network.dat", "r")
     data = f.readlines()
@@ -37,8 +44,9 @@ def initiEmbeddings():
             except nx.exception.NetworkXError:
                 graph = networkx_getnetwork()
 
-            node2vec = Node2Vec(graph, dimensions=64, walk_length=30, num_walks=200, workers=4)
-            model = node2vec.fit(window=10, min_count=1, batch_words=4)
+            node2vec = Node2Vec(graph, walk_length=30, num_walks=200, workers=4)
+            # model = node2vec.fit(window=10, min_count=1, batch_words=4)
+            model = node2vec.train(window=10, min_count=1, batch_words=4)
             model.wv.save_word2vec_format(EMBEDDING_FILENAME)
 
         with open(basepath + 'embeddings.emb') as f1:

@@ -5,12 +5,14 @@ import torch
 import numpy as np
 
 
+# 存储归一化互信息函数
 def save_nmi(file_path, result):
     with open(file_path, mode='a') as f:
         f.write('NMI: ' + str(result) + '\n')
         f.close()
     return
 
+# 预测CAM
 def getPredictCAM(F, threshold):
     one = torch.from_numpy(np.array([1]))
     zero = torch.from_numpy(np.array([0]))
@@ -18,6 +20,7 @@ def getPredictCAM(F, threshold):
     return PCAM
 
 
+# 获得RCAM和社区数量
 def getRCAM_and_CN(num_node, file, rcam_file):
     if os.path.exists(rcam_file):
         # RCAM = np.loadtxt(racm_file)
@@ -41,7 +44,8 @@ def getRCAM_and_CN(num_node, file, rcam_file):
     return RCAM, int(RCAM.shape[- 1])
 
 
-def overlapping_nmi(X, Y):
+# 重叠归一化互信息，一个评价标准
+def overlapping_nmi(X, Y): # normalized mutual information。归一化互信息
     # X:RCAM
     # Y:PCAM
     if not ((X == 0) | (X == 1)).all():

@@ -137,7 +137,7 @@ def run():
         optimizer.zero_grad()
         loss.backward()
         PCAM = getPredictCAM(H, threshold)
-        nmi_score = overlapping_nmi(RCAM.float(), PCAM.float())
+        nmi_score = overlapping_nmi(RCAM.float(), PCAM.float())  # nmi归一化互信息
         print('Epoch:{}  Loss:{}  NMI:{}'.format(str(epoch), str(loss.item()), str(nmi_score.item())))
         # 保存结果
         optimizer.step()
